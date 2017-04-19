@@ -15,7 +15,6 @@ import logging
 import logging.config
 
 from superdesk.factory import get_app as superdesk_app
-from superdesk.logging import configure_logging
 
 logger = logging.getLogger(__name__)
 
@@ -42,16 +41,7 @@ def get_app(config=None):
     for key in dir(settings):
         if key.isupper():
             config.setdefault(key, getattr(settings, key))
-
-    media_storage = None
-    if config['AMAZON_CONTAINER_NAME']:
-        from superdesk.storage.amazon.amazon_media_storage import AmazonMediaStorage
-        media_storage = AmazonMediaStorage
-
-    config['DOMAIN'] = {}
-
-    app = superdesk_app(config, media_storage)
-    configure_logging(config['LOG_CONFIG_FILE'])
+    app = superdesk_app(config)
     return app
 
 
